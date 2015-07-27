@@ -24,9 +24,12 @@
  */
 
 #import "cocos2d.h"
+#import "Mixpanel.h"
 
 #import "AppDelegate.h"
 #import "CCBuilderReader.h"
+
+#define MIXPANEL_TOKEN @"39094f07bd85d6128d5ac1e250eb8d4a"
 
 @implementation AppController
 
@@ -53,6 +56,14 @@
     //[cocos2dSetup setObject:kEAGLColorFormatRGB565 forKey:CCConfigPixelFormat];
     
     [self setupCocos2dWithOptions:cocos2dSetup];
+    
+    // Mixpanel stuff.
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    [mixpanel track:@"Game Launched"];
+    [mixpanel identify:mixpanel.distinctId];
     
     return YES;
 }
