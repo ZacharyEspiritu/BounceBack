@@ -10,88 +10,89 @@ import Foundation
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
+    var fallSpeed: CGFloat = 100
+    
+    // MARK: Variables
+    
     weak var hero: Hero!
     
     weak var gameplayArea: CCNode!
     weak var gamePhysicsNode: CCPhysicsNode!
     
-    var lastFourSides: [Side] = [.None, .None, .None, .None]
+    weak var leftWall1, leftWall2, rightWall1, rightWall2: CCNode!
+    var leftWallArray:  [CCNode] = []
+    var rightWallArray: [CCNode] = []
     
+    var lastFourSides: [Side] = [.None, .None, .None, .None]
     var spikeArray: [Spike] = []
     
+    
+    // MARK: Functions
+    
     func didLoadFromCCB() {
-        
         gamePhysicsNode.collisionDelegate = self
         
         for index in 0..<21 {
-            
-            // Load a new piece from Piece.ccb and cast it as part of the piece class
             var spike = CCBReader.load("Spike") as! Spike
             
-            // Randomizes the current piece's obstacle side and updates pieceLastSide since .setObstacle returns the chosen side.
             lastFourSides.append(spike.setSide(lastFourSides: lastFourSides))
             lastFourSides.removeAtIndex(0)
             
-            // Set the position of the new piece to the just above the last piece
             var spikeHeight = spike.contentSizeInPoints.height * CGFloat(index)
             spike.position = CGPoint(x: gameplayArea.contentSizeInPoints.width / 2, y: spikeHeight)
             
-            // Add the piece as a child of the piecesNode
             gamePhysicsNode.addChild(spike)
-            
-            // Append the piece to the end of the pieces array
             spikeArray.append(spike)
-            
         }
+        
+        leftWallArray.append(leftWall1)
+        leftWallArray.append(leftWall2)
+        rightWallArray.append(rightWall1)
+        rightWallArray.append(rightWall2)
         
         gamePhysicsNode.debugDraw = true
         
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
-        
+    }
+    
+    override func update(delta: CCTime) {
+        hero.position = CGPoint(x: hero.position.x, y: hero.position.y - (fallSpeed * CGFloat(delta)))
+        gamePhysicsNode.position = CGPoint(x: gamePhysicsNode.position.x, y: gamePhysicsNode.position.y + (fallSpeed * CGFloat(delta)))
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        
         hero.switchSides()
         
         if hero.currentSide == .Left {
             gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
-            hero.physicsBody.velocity = CGPoint(x: 500, y: 0)
+            hero.physicsBody.velocity = CGPoint(x: 200, y: 0)
             hero.currentSide = .Right
         }
         else {
             gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
             
-            hero.physicsBody.velocity = CGPoint(x: -500, y: 0)
+            hero.physicsBody.velocity = CGPoint(x: -200, y: 0)
             hero.currentSide = .Left
         }
-                
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, spike: CCNode!) -> Bool {
-     
         println("spike")
         return true
-        
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, leftWall: CCNodeGradient!) -> Bool {
-        
         println("left")
         hero.animationManager.runAnimationsForSequenceNamed("LeftWallSlide")
         
         return true
-        
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, rightWall: CCNodeGradient!) -> Bool {
-        
         println("right")
         hero.animationManager.runAnimationsForSequenceNamed("RightWallSlide")
         
         return true
-        
     }
-
 }
