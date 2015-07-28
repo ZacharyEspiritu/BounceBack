@@ -14,8 +14,11 @@ enum GameState {
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
+    // MARK: Constants
+    
     let startingSpikePosition: CGFloat = -200
-    var fallSpeed: CGFloat = 300
+    let fallSpeed: CGFloat = 350
+    let crossoverSpeed: CGFloat = 300
     
     
     // MARK: Variables
@@ -93,6 +96,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                 if wallPosition.y >= (wall.contentSize.height) {
                     wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
                 }
+                let scale = CCDirector.sharedDirector().contentScaleFactor
+                gamePhysicsNode.position = ccp(round(gamePhysicsNode.position.x * scale) / scale, round(gamePhysicsNode.position.y * scale) / scale)
+                hero.position = ccp(round(hero.position.x * scale) / scale, round(hero.position.y * scale) / scale)
             }
             
             for spike in spikeArray.reverse() {
@@ -115,13 +121,13 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             
             if hero.currentSide == .Left {
                 gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
-                hero.physicsBody.velocity = CGPoint(x: 200, y: 0)
+                hero.physicsBody.velocity = CGPoint(x: crossoverSpeed, y: 0)
                 hero.currentSide = .Right
             }
             else {
                 gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
                 
-                hero.physicsBody.velocity = CGPoint(x: -200, y: 0)
+                hero.physicsBody.velocity = CGPoint(x: -crossoverSpeed, y: 0)
                 hero.currentSide = .Left
             }
         }
