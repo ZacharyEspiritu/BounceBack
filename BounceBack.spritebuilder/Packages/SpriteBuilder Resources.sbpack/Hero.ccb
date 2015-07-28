@@ -189,7 +189,7 @@
 			<key>collisionType</key>
 			<string>hero</string>
 			<key>cornerRadius</key>
-			<real>1</real>
+			<real>0.0</real>
 			<key>density</key>
 			<real>1</real>
 			<key>dynamic</key>
@@ -206,14 +206,14 @@
 				</array>
 				<array>
 					<real>0.0</real>
-					<real>248</real>
+					<real>247</real>
 				</array>
 				<array>
-					<real>218</real>
-					<real>248</real>
+					<real>219</real>
+					<real>247</real>
 				</array>
 				<array>
-					<real>218</real>
+					<real>219</real>
 					<real>0.0</real>
 				</array>
 			</array>
@@ -221,16 +221,16 @@
 			<array>
 				<array>
 					<array>
-						<real>218</real>
+						<real>219</real>
 						<real>0.0</real>
 					</array>
 					<array>
-						<real>218</real>
-						<real>248</real>
+						<real>219</real>
+						<real>247</real>
 					</array>
 					<array>
 						<real>0.0</real>
-						<real>248</real>
+						<real>247</real>
 					</array>
 					<array>
 						<real>0.0</real>

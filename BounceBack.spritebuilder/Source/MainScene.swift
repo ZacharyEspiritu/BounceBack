@@ -8,11 +8,19 @@
 
 import Foundation
 
+enum GameState {
+    case Initial, Playing, Paused, Menu, Gameover
+}
+
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
-    var fallSpeed: CGFloat = 220
+    let startingSpikePosition: CGFloat = -200
+    var fallSpeed: CGFloat = 300
+    
     
     // MARK: Variables
+    
+    var gameState: GameState = .Initial
     
     weak var hero: Hero!
     
@@ -23,8 +31,10 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     var leftWallArray:  [CCNode] = []
     var rightWallArray: [CCNode] = []
     
-    var lastFourSides: [Side] = [.None, .None, .None, .None]
+    var lastFiveSides: [Side] = [.None, .None, .None, .None, .None]
     var spikeArray: [Spike] = []
+    
+    var jumpsRemaining: Int = 2
     
     
     // MARK: Functions
@@ -33,16 +43,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         gamePhysicsNode.collisionDelegate = self
         
         for index in 0..<21 {
-            var spike = CCBReader.load("Spike") as! Spike
-            
-            lastFourSides.append(spike.setSide(lastFourSides: lastFourSides))
-            lastFourSides.removeAtIndex(0)
-            
-            var spikeHeight = spike.contentSizeInPoints.height * CGFloat(index)
-            spike.position = CGPoint(x: gameplayArea.contentSizeInPoints.width / 2, y: spikeHeight)
-            
-            gamePhysicsNode.addChild(spike)
-            spikeArray.append(spike)
+            spawnNewSpike()
         }
         
         leftWallArray.append(leftWall1)
@@ -50,59 +51,141 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         rightWallArray.append(rightWall1)
         rightWallArray.append(rightWall2)
         
-        // gamePhysicsNode.debugDraw = true
+        //gamePhysicsNode.debugDraw = true
         
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
     }
     
-    override func update(delta: CCTime) {
-        hero.position = CGPoint(x: hero.position.x, y: hero.position.y - (fallSpeed * CGFloat(delta)))
-        gamePhysicsNode.position = CGPoint(x: gamePhysicsNode.position.x, y: gamePhysicsNode.position.y + (fallSpeed * CGFloat(delta)))
-        
-        for wall in leftWallArray {
-            let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
-            if wallPosition.y >= (wall.contentSize.height) {
-                wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
-            }
+    func spawnNewSpike() {
+        var previousSpikePosition: CGFloat = startingSpikePosition
+        if spikeArray.count > 0 {
+            previousSpikePosition = spikeArray.last!.position.y
         }
         
-        for wall in rightWallArray {
-            let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
-            if wallPosition.y >= (wall.contentSize.height) {
-                wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
+        // create and add a new obstacle
+        let spike = CCBReader.load("Spike") as! Spike
+        
+        lastFiveSides.append(spike.setSide(lastFiveSides: lastFiveSides))
+        lastFiveSides.removeAtIndex(0)
+        
+        spike.position = CGPoint(x: gameplayArea.contentSizeInPoints.width / 2, y: previousSpikePosition - spike.contentSizeInPoints.height)
+        
+        gamePhysicsNode.addChild(spike)
+        spikeArray.append(spike)
+    }
+    
+    override func update(delta: CCTime) {
+        
+        if gameState != .Gameover {
+            hero.position = CGPoint(x: hero.position.x, y: hero.position.y - (fallSpeed * CGFloat(delta)))
+            gamePhysicsNode.position = CGPoint(x: gamePhysicsNode.position.x, y: gamePhysicsNode.position.y + (fallSpeed * CGFloat(delta)))
+            
+            for wall in leftWallArray {
+                let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
+                if wallPosition.y >= (wall.contentSize.height) {
+                    wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
+                }
+            }
+            
+            for wall in rightWallArray {
+                let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
+                if wallPosition.y >= (wall.contentSize.height) {
+                    wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
+                }
+            }
+            
+            for spike in spikeArray.reverse() {
+                let spikePosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(spike.position))
+                
+                if spikePosition.y > gamePhysicsNode.contentSizeInPoints.height {
+                    spike.removeFromParent()
+                    spikeArray.removeAtIndex(find(spikeArray, spike)!)
+                    
+                    spawnNewSpike()
+                }
             }
         }
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        hero.switchSides()
-        
-        if hero.currentSide == .Left {
-            gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
-            hero.physicsBody.velocity = CGPoint(x: 200, y: 0)
-            hero.currentSide = .Right
+        if jumpsRemaining > 0 {
+            jumpsRemaining--
+            hero.switchSides()
+            
+            if hero.currentSide == .Left {
+                gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
+                hero.physicsBody.velocity = CGPoint(x: 200, y: 0)
+                hero.currentSide = .Right
+            }
+            else {
+                gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
+                
+                hero.physicsBody.velocity = CGPoint(x: -200, y: 0)
+                hero.currentSide = .Left
+            }
         }
         else {
-            gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
-            
-            hero.physicsBody.velocity = CGPoint(x: -200, y: 0)
-            hero.currentSide = .Left
+            println("nope")
         }
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, spike: CCNode!) -> Bool {
-        println("spike")
+        if gameState != .Gameover {
+            triggerGameover()
+        }
+        gameState = .Gameover
         return true
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, leftWall: CCNodeGradient!) -> Bool {
         hero.animationManager.runAnimationsForSequenceNamed("LeftWallSlide")
+        hero.physicsBody.velocity = CGPoint(x: 0, y: 0)
+        jumpsRemaining = 2
         return true
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, rightWall: CCNodeGradient!) -> Bool {
         hero.animationManager.runAnimationsForSequenceNamed("RightWallSlide")
+        hero.physicsBody.velocity = CGPoint(x: 0, y: 0)
+        jumpsRemaining = 2
         return true
+    }
+    
+    func triggerGameover() {
+        if hero.currentSide == .Left {
+            hero.runAction(CCActionRotateBy(duration: 0.3, angle: 50))
+            hero.runAction(CCActionEaseBackIn(action: CCActionMoveBy(duration: 0.5, position: CGPoint(x: 100, y: -CCDirector.sharedDirector().viewSize().height))))
+        }
+        else {
+            hero.runAction(CCActionRotateBy(duration: 0.3, angle: 50))
+            hero.runAction(CCActionEaseBackIn(action: CCActionMoveBy(duration: 0.5, position: CGPoint(x: -100, y: -CCDirector.sharedDirector().viewSize().height))))
+        }
+        
+        delay(2) {
+            var gameplayScene = CCBReader.load("MainScene") as! MainScene
+            
+            var scene = CCScene()
+            scene.addChild(gameplayScene)
+            
+            CCDirector.sharedDirector().presentScene(scene)
+        }
+    }
+    
+    
+    // MARK: Convenience Functions
+    
+    /**
+    When called, delays the running of code included in the `closure` parameter.
+    
+    :param: delay  how long, in milliseconds, to wait until the program should run the code in the closure statement
+    */
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
 }

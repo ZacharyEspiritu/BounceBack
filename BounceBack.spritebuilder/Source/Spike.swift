@@ -48,19 +48,16 @@ class Spike: CCNode {
         rightSpike.physicsBody.sensor = true
     }
     
-    func setSide(#lastFourSides: [Side]) -> Side {
+    func setSide(#lastFiveSides: [Side]) -> Side {
         
-        if lastFourSides[3] == .Left {
-            if lastFourSides[2] == .Left && lastFourSides[1] == .Left && lastFourSides[0] == .Left {
+        if lastFiveSides[4] == .Left {
+            if lastFiveSides[3] == .Left && lastFiveSides[2] == .Left && lastFiveSides[1] == .Left && lastFiveSides[0] == .Left {
                 let rand = CCRANDOM_0_1()
                 
                 if rand < 0.40 {
                     side = .Left
                 }
-                else if rand < 0.8 {
-                    side = .Right
-                }
-                else if rand < 0.95 {
+                else if rand < 0.80 {
                     side = .Both
                 }
                 else {
@@ -71,17 +68,14 @@ class Spike: CCNode {
                 side = .Left
             }
         }
-        else if lastFourSides[3] == .Right {
-            if lastFourSides[2] == .Right && lastFourSides[1] == .Right && lastFourSides[0] == .Right {
+        else if lastFiveSides[4] == .Right {
+            if lastFiveSides[3] == .Right && lastFiveSides[2] == .Right && lastFiveSides[1] == .Right && lastFiveSides[0] == .Right {
                 let rand = CCRANDOM_0_1()
                 
                 if rand < 0.40 {
-                    side = .Left
-                }
-                else if rand < 0.8 {
                     side = .Right
                 }
-                else if rand < 0.95 {
+                else if rand < 0.8 {
                     side = .Both
                 }
                 else {
@@ -92,11 +86,11 @@ class Spike: CCNode {
                 side = .Right
             }
         }
-        else if lastFourSides[3] == .Both {
-            if lastFourSides[2] == .Right {
+        else if lastFiveSides[4] == .Both {
+            if lastFiveSides[3] == .Right {
                 side = .Right
             }
-            else if lastFourSides[2] == .Left {
+            else if lastFiveSides[3] == .Left {
                 side = .Left
             }
             else {
