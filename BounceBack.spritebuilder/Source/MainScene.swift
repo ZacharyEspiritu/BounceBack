@@ -10,7 +10,7 @@ import Foundation
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
-    var fallSpeed: CGFloat = 100
+    var fallSpeed: CGFloat = 200
     
     // MARK: Variables
     
@@ -59,6 +59,20 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     override func update(delta: CCTime) {
         hero.position = CGPoint(x: hero.position.x, y: hero.position.y - (fallSpeed * CGFloat(delta)))
         gamePhysicsNode.position = CGPoint(x: gamePhysicsNode.position.x, y: gamePhysicsNode.position.y + (fallSpeed * CGFloat(delta)))
+        
+        for wall in leftWallArray {
+            let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
+            if wallPosition.y >= (wall.contentSize.height) {
+                wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
+            }
+        }
+        
+        for wall in rightWallArray {
+            let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
+            if wallPosition.y >= (wall.contentSize.height) {
+                wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
+            }
+        }
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
