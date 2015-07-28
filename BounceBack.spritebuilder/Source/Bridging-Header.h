@@ -16,3 +16,4 @@
 #import "libs/cocos2d-iphone/external/ObjectAL/ObjectAL/ObjectAL/Session/OALAudioSession.h"
 
 #import "Mixpanel.h"
+#import "UAAppReviewManager.h"

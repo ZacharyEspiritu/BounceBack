@@ -13,18 +13,11 @@ class Hero: CCSprite {
     var currentSide: Side = .Left
     
     func switchSides() {
-        
         if currentSide == .Left {
-            
             self.animationManager.runAnimationsForSequenceNamed("LeftToRight")
-            
         }
         else if currentSide == .Right {
-            
             self.animationManager.runAnimationsForSequenceNamed("RightToLeft")
-            
         }
-        
     }
-    
 }

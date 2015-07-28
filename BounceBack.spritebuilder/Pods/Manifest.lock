@@ -2,11 +2,14 @@ PODS:
   - Mixpanel (2.8.2):
     - Mixpanel/Mixpanel (= 2.8.2)
   - Mixpanel/Mixpanel (2.8.2)
+  - UAAppReviewManager (0.2.6)
 
 DEPENDENCIES:
   - Mixpanel
+  - UAAppReviewManager
 
 SPEC CHECKSUMS:
   Mixpanel: f4d71ac2a306e7cda6ad03d4a2be249a0fd7a967
+  UAAppReviewManager: 334bdb0085c3f80c7b696f33edc53667eda548e6
 
 COCOAPODS: 0.37.2

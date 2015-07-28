@@ -24,10 +24,12 @@
  */
 
 #import "cocos2d.h"
-#import "Mixpanel.h"
 
 #import "AppDelegate.h"
 #import "CCBuilderReader.h"
+
+#import "Mixpanel.h"
+#import "UAAppReviewManager.h"
 
 #define MIXPANEL_TOKEN @"39094f07bd85d6128d5ac1e250eb8d4a"
 
@@ -64,6 +66,10 @@
     
     [mixpanel track:@"Game Launched"];
     [mixpanel identify:mixpanel.distinctId];
+    
+    [UAAppReviewManager setAppID:@"1023595880"];
+    
+    [UAAppReviewManager showPromptIfNecessary];
     
     return YES;
 }

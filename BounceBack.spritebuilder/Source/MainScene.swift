@@ -10,7 +10,7 @@ import Foundation
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
-    var fallSpeed: CGFloat = 200
+    var fallSpeed: CGFloat = 220
     
     // MARK: Variables
     
@@ -50,7 +50,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         rightWallArray.append(rightWall1)
         rightWallArray.append(rightWall2)
         
-        gamePhysicsNode.debugDraw = true
+        // gamePhysicsNode.debugDraw = true
         
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
@@ -97,16 +97,12 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, leftWall: CCNodeGradient!) -> Bool {
-        println("left")
         hero.animationManager.runAnimationsForSequenceNamed("LeftWallSlide")
-        
         return true
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, rightWall: CCNodeGradient!) -> Bool {
-        println("right")
         hero.animationManager.runAnimationsForSequenceNamed("RightWallSlide")
-        
         return true
     }
 }

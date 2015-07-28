@@ -18,10 +18,7 @@ class Spike: CCNode {
     weak var rightSpike: CCSprite!
     
     var side: Side = .None {
-        
-        // Purpose of using didSet: it's called everytime the side variable is set, which automatically will trigger which side will be the correct one to display.
         didSet {
-            
             leftSpike.visible = false
             rightSpike.visible = false
             
@@ -43,9 +40,7 @@ class Spike: CCNode {
                 rightSpike.position = CGPoint(x: 0, y: rightSpike.position.y)
                 leftSpike.position = CGPoint(x: 0, y: leftSpike.position.y)
             }
-            
         }
-        
     }
     
     func didLoadFromCCB() {

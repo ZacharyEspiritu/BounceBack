@@ -151,6 +151,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		556A05AD1B672B890083D902 /* UAAppReviewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UAAppReviewManager.h; path = Pods/UAAppReviewManager/UAAppReviewManager.h; sourceTree = "<group>"; };
 		55CE4BEE1B65B009007540E5 /* Mixpanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mixpanel.h; path = Pods/Mixpanel/Mixpanel/Mixpanel.h; sourceTree = "<group>"; };
 		55E8FF3C1B664F9700F3F366 /* Spike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Spike.swift; path = Source/Spike.swift; sourceTree = "<group>"; };
 		55E8FF3E1B664FC800F3F366 /* Hero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hero.swift; path = Source/Hero.swift; sourceTree = "<group>"; };
@@ -450,6 +451,7 @@
 				55E8FF3E1B664FC800F3F366 /* Hero.swift */,
 				D352B48019EC608A00829775 /* MetalShaders */,
 				55CE4BEE1B65B009007540E5 /* Mixpanel.h */,
+				556A05AD1B672B890083D902 /* UAAppReviewManager.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
