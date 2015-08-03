@@ -97,17 +97,12 @@ class Spike: CCNode {
                 side = .None
             }
         }
-        else {
-            let rand = CCRANDOM_0_1()
-            
-            if rand < 0.45 {
+        else if lastFiveSides[4] == .None {
+            if lastFiveSides[3] == .Right {
                 side = .Left
             }
-            else if rand < 0.9 {
-                side = .Right
-            }
             else {
-                side = .None
+                side = .Right
             }
         }
         

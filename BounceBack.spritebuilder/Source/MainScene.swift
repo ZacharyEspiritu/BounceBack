@@ -39,6 +39,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     var jumpsRemaining: Int = 2
     
+    var streak: CCMotionStreak = CCMotionStreak(fade: Float(100), minSeg: Float(1), width: Float(5), color: CCColor(red: 255, green: 255, blue: 255, alpha: 0), texture: CCTexture(file: "leftWallSlide.png"))
+    
     
     // MARK: Functions
     
@@ -58,6 +60,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
+        
+        streak.position = hero.position
+
     }
     
     func spawnNewSpike() {
@@ -66,7 +71,6 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             previousSpikePosition = spikeArray.last!.position.y
         }
         
-        // create and add a new obstacle
         let spike = CCBReader.load("Spike") as! Spike
         
         lastFiveSides.append(spike.setSide(lastFiveSides: lastFiveSides))
@@ -90,7 +94,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                     wall.position = CGPoint(x: wall.position.x, y: wall.position.y - wall.contentSize.height * 2)
                 }
             }
-            
+
             for wall in rightWallArray {
                 let wallPosition = convertToNodeSpace(gamePhysicsNode.convertToWorldSpace(wall.position))
                 if wallPosition.y >= (wall.contentSize.height) {
@@ -130,6 +134,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                 hero.physicsBody.velocity = CGPoint(x: -crossoverSpeed, y: 0)
                 hero.currentSide = .Left
             }
+
         }
         else {
             println("nope")
