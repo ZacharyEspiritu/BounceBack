@@ -39,8 +39,15 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     var jumpsRemaining: Int = 2
     
-    var streak: CCMotionStreak = CCMotionStreak(fade: Float(100), minSeg: Float(1), width: Float(5), color: CCColor(red: 255, green: 255, blue: 255, alpha: 0), texture: CCTexture(file: "leftWallSlide.png"))
+    weak var scoreLabel: CCLabelTTF!
+    var score: Double = 0 {
+        didSet {
+            let truncatedScore = Double(round(10 * score) / 10)
+            scoreLabel.string = "\(truncatedScore) m"
+        }
+    }
     
+    weak var titleScreen: CCNode!
     
     // MARK: Functions
     
@@ -61,8 +68,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
         
-        streak.position = hero.position
-
+        gameState = .Initial
     }
     
     func spawnNewSpike() {
@@ -84,7 +90,10 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     override func update(delta: CCTime) {
         
-        if gameState != .Gameover {
+        if gameState == .Playing {
+            
+            score += delta * 5
+            
             hero.position = CGPoint(x: hero.position.x, y: hero.position.y - (fallSpeed * CGFloat(delta)))
             gamePhysicsNode.position = CGPoint(x: gamePhysicsNode.position.x, y: gamePhysicsNode.position.y + (fallSpeed * CGFloat(delta)))
             
@@ -119,25 +128,34 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        if jumpsRemaining > 0 {
-            jumpsRemaining--
-            hero.switchSides()
-            
-            if hero.currentSide == .Left {
-                gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
-                hero.physicsBody.velocity = CGPoint(x: crossoverSpeed, y: 0)
-                hero.currentSide = .Right
+        
+        if gameState == .Playing {
+            if jumpsRemaining > 0 {
+                jumpsRemaining--
+                hero.switchSides()
+                
+                if hero.currentSide == .Left {
+                    gamePhysicsNode.gravity = CGPoint(x: 1500, y: 0)
+                    hero.physicsBody.velocity = CGPoint(x: crossoverSpeed, y: 0)
+                    hero.currentSide = .Right
+                }
+                else {
+                    gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
+                    
+                    hero.physicsBody.velocity = CGPoint(x: -crossoverSpeed, y: 0)
+                    hero.currentSide = .Left
+                }
+                
             }
             else {
-                gamePhysicsNode.gravity = CGPoint(x: -1500, y: 0)
-                
-                hero.physicsBody.velocity = CGPoint(x: -crossoverSpeed, y: 0)
-                hero.currentSide = .Left
+                println("nope")
             }
-
         }
-        else {
-            println("nope")
+        else if gameState == .Initial {
+            titleScreen.runAction(CCActionFadeOut(duration: 1))
+            delay(1) {
+                gameState == .Playing
+            }
         }
     }
     
@@ -145,13 +163,20 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         if gameState != .Gameover {
             triggerGameover()
         }
-        gameState = .Gameover
         return true
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, leftWall: CCNodeGradient!) -> Bool {
         hero.animationManager.runAnimationsForSequenceNamed("LeftWallSlide")
         hero.physicsBody.velocity = CGPoint(x: 0, y: 0)
+        
+        if jumpsRemaining < 2 {
+            let move = CCActionEaseBounceOut(action: CCActionMoveBy(duration: 0.1, position: ccp(-5, 0)))
+            let moveBack = CCActionEaseBounceOut(action: move.reverse())
+            let shakeSequence = CCActionSequence(array: [move, moveBack])
+            self.runAction(shakeSequence)
+        }
+        
         jumpsRemaining = 2
         return true
     }
@@ -159,11 +184,22 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, rightWall: CCNodeGradient!) -> Bool {
         hero.animationManager.runAnimationsForSequenceNamed("RightWallSlide")
         hero.physicsBody.velocity = CGPoint(x: 0, y: 0)
+        
+        if jumpsRemaining < 2 {
+            let move = CCActionEaseBounceOut(action: CCActionMoveBy(duration: 0.1, position: ccp(5, 0)))
+            let moveBack = CCActionEaseBounceOut(action: move.reverse())
+            let shakeSequence = CCActionSequence(array: [move, moveBack])
+            self.runAction(shakeSequence)
+        }
+        
         jumpsRemaining = 2
         return true
     }
     
     func triggerGameover() {
+        
+        gameState = .Gameover
+        
         if hero.currentSide == .Left {
             hero.runAction(CCActionRotateBy(duration: 0.3, angle: 50))
             hero.runAction(CCActionEaseBackIn(action: CCActionMoveBy(duration: 0.5, position: CGPoint(x: 100, y: -CCDirector.sharedDirector().viewSize().height))))
@@ -172,6 +208,23 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             hero.runAction(CCActionRotateBy(duration: 0.3, angle: 50))
             hero.runAction(CCActionEaseBackIn(action: CCActionMoveBy(duration: 0.5, position: CGPoint(x: -100, y: -CCDirector.sharedDirector().viewSize().height))))
         }
+        
+        self.delay(0.07) {
+            AudioServicesPlayAlertSound(UInt32(kSystemSoundID_Vibrate))
+        }
+        
+        let randomPosition: CGFloat?
+        if CCRANDOM_0_1() < 0.5 {
+            randomPosition = -7
+        }
+        else {
+            randomPosition = 7
+        }
+        
+        let move = CCActionEaseBounceOut(action: CCActionMoveBy(duration: 0.2, position: ccp(randomPosition!, randomPosition!)))
+        let moveBack = CCActionEaseBounceOut(action: move.reverse())
+        let shakeSequence = CCActionSequence(array: [move, moveBack])
+        self.runAction(shakeSequence)
         
         delay(2) {
             var gameplayScene = CCBReader.load("MainScene") as! MainScene

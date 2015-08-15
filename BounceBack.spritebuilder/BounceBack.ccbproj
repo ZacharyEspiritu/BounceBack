@@ -85,6 +85,11 @@
 			<key>isSmartSpriteSheet</key>
 			<true/>
 		</dict>
+		<key>assets/bam.png</key>
+		<dict>
+			<key>scaleFrom</key>
+			<integer>1</integer>
+		</dict>
 		<key>ccbResources</key>
 		<dict>
 			<key>previewFolderHidden</key>

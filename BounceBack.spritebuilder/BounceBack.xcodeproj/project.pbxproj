@@ -10,6 +10,7 @@
 		5528F6AF1B687083005E2588 /* leftWallSlide.png in Resources */ = {isa = PBXBuildFile; fileRef = 5528F6AE1B687083005E2588 /* leftWallSlide.png */; };
 		55E8FF3D1B664F9700F3F366 /* Spike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E8FF3C1B664F9700F3F366 /* Spike.swift */; };
 		55E8FF3F1B664FC800F3F366 /* Hero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E8FF3E1B664FC800F3F366 /* Hero.swift */; };
+		55FFD3721B7EE84700297413 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55FFD3711B7EE84700297413 /* Images.xcassets */; };
 		5683B982A4F08F0FA2C19A08 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC8AEDF1CCE15A2788CB129 /* libPods.a */; };
 		5B121030197484FA004C1E1D /* BounceBackActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* BounceBackActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
@@ -157,6 +158,7 @@
 		55CE4BEE1B65B009007540E5 /* Mixpanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mixpanel.h; path = Pods/Mixpanel/Mixpanel/Mixpanel.h; sourceTree = "<group>"; };
 		55E8FF3C1B664F9700F3F366 /* Spike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Spike.swift; path = Source/Spike.swift; sourceTree = "<group>"; };
 		55E8FF3E1B664FC800F3F366 /* Hero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hero.swift; path = Source/Hero.swift; sourceTree = "<group>"; };
+		55FFD3711B7EE84700297413 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
 		5B121011197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 		B77F1B4617B978D7009739AE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55FFD3711B7EE84700297413 /* Images.xcassets */,
 				5528F6AE1B687083005E2588 /* leftWallSlide.png */,
 				7A40366119DDF8C2007B6E8F /* Platforms */,
 				5B12100D197483EE004C1E1D /* res */,
@@ -767,6 +770,7 @@
 				B71F591A188484E7003F4D28 /* Settings@2x.png in Resources */,
 				B7378976180762440076A88C /* Default-Landscape~ipad.png in Resources */,
 				B71F5915188484E7003F4D28 /* iPhone-old.png in Resources */,
+				55FFD3721B7EE84700297413 /* Images.xcassets in Resources */,
 				B71F5917188484E7003F4D28 /* iPhone.png in Resources */,
 				B7378975180762440076A88C /* Default-568h@2x.png in Resources */,
 				B71F5918188484E7003F4D28 /* iPhone@2x.png in Resources */,
@@ -1161,6 +1165,8 @@
 			baseConfigurationReference = 9751BFDF3DE144E3EE81E270 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1177,7 +1183,7 @@
 					"\"Source/libs/cocos2d-iphone/external/ObjectAL\"/**",
 				);
 				INFOPLIST_FILE = Source/Resources/Platforms/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1198,6 +1204,8 @@
 			baseConfigurationReference = 668A6EF722DD611368B6D700 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1213,7 +1221,7 @@
 					"\"Source/libs/cocos2d-iphone/external/ObjectAL\"/**",
 				);
 				INFOPLIST_FILE = Source/Resources/Platforms/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-lz",
