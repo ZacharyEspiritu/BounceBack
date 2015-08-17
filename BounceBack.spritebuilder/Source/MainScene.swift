@@ -8,8 +8,12 @@
 
 import Foundation
 
-enum GameState {
-    case Initial, Playing, Paused, Menu, Gameover
+enum GameState: String {
+    case Initial = "Initial"
+    case Playing = "Playing"
+    case Paused = "Paused"
+    case Menu = "Menu"
+    case Gameover = "Gameover"
 }
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
@@ -68,6 +72,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         self.userInteractionEnabled = true
         self.multipleTouchEnabled = true
         
+        hero.opacity = 0
+        scoreLabel.opacity = 0
+        
         gameState = .Initial
     }
     
@@ -89,6 +96,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     override func update(delta: CCTime) {
+        
+        println(gameState.rawValue)
         
         if gameState == .Playing {
             
@@ -152,10 +161,13 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             }
         }
         else if gameState == .Initial {
-            titleScreen.runAction(CCActionFadeOut(duration: 1))
-            delay(1) {
-                gameState == .Playing
-            }
+            titleScreen.cascadeOpacityEnabled = true
+            titleScreen.runAction(CCActionFadeTo(duration: 0.5, opacity: 0))
+            
+            hero.runAction(CCActionFadeIn(duration: 0.7))
+            scoreLabel.runAction(CCActionFadeIn(duration: 1))
+            
+            gameState = .Playing
         }
     }
     
@@ -232,7 +244,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             var scene = CCScene()
             scene.addChild(gameplayScene)
             
-            CCDirector.sharedDirector().presentScene(scene)
+            var transition = CCTransition(fadeWithDuration: 0.3)
+            CCDirector.sharedDirector().presentScene(scene, withTransition: transition)
         }
     }
     
